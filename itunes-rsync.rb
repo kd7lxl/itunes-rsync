@@ -1,5 +1,5 @@
 #!/usr/bin/ruby
-# $Id: itunes-rsync.rb,v 1.3 2009/01/27 08:51:54 jcs Exp $
+# $Id: itunes-rsync.rb,v 1.4 2009/01/27 08:52:30 jcs Exp $
 #
 # rsync the files of an itunes playlist with another directory, most likely a
 # usb music device.  requires the rubyosa gem ("sudo gem install rubyosa")
@@ -90,7 +90,7 @@ gcd = ""
 end
 
 # setup work dir
-td = `mktemp -d /tmp/itunesrsync.XXXXX`.strip
+td = `mktemp -d /tmp/itunes-rsync.XXXXX`.strip
 
 # mirror directory structure and create symlinks
 print "linking files under #{td}/... "
