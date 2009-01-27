@@ -1,8 +1,8 @@
 #!/usr/bin/ruby
-# $Id: itunes-rsync.rb,v 1.1 2009/01/27 08:49:12 jcs Exp $
+# $Id: itunes-rsync.rb,v 1.2 2009/01/27 08:50:20 jcs Exp $
 #
-# rsync an itunes playlist with another directory, most likely a usb music
-# device
+# rsync the files of an itunes playlist with another directory, most likely a
+# usb music device
 #
 # requires the rubyosa gem ("sudo gem install rubyosa")
 #
