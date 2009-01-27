@@ -1,5 +1,5 @@
 #!/usr/bin/ruby
-# $Id: itunes-rsync.rb,v 1.4 2009/01/27 08:52:30 jcs Exp $
+# $Id: itunes-rsync.rb,v 1.5 2009/01/27 09:11:14 jcs Exp $
 #
 # rsync the files of an itunes playlist with another directory, most likely a
 # usb music device.  requires the rubyosa gem ("sudo gem install rubyosa")
@@ -100,10 +100,11 @@ tracks.each do |t|
   tmppath = "#{td}/#{shortpath}"
 
   if !Dir[File.dirname(tmppath)].any?
+    # i'm too lazy to emulate -p with Dir.mkdir
     system("mkdir", "-p", File.dirname(tmppath))
   end
 
-  system("ln", "-s", t, tmppath)
+  File.symlink(t, tmppath)
 end
 
 puts "done."
