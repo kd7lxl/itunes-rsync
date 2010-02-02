@@ -92,19 +92,28 @@ end
 # setup work dir
 td = `mktemp -d /tmp/itunes-rsync.XXXXX`.strip
 
-# mirror directory structure and create symlinks
-print "linking files under #{td}/... "
+# open m3u playlist file for writing
+File.open("#{td}/#{playlist}.m3u",'w') do |f|
+  f.puts '#EXTM3U'
 
-tracks.each do |t|
-  shortpath = t[gcd.length .. t.length - 1]
-  tmppath = "#{td}/#{shortpath}"
+  # mirror directory structure and create symlinks
+  print "linking files under #{td}/... "
 
-  if !Dir[File.dirname(tmppath)].any?
-    # i'm too lazy to emulate -p with Dir.mkdir
-    system("mkdir", "-p", File.dirname(tmppath))
+  tracks.each do |t|
+    shortpath = t[gcd.length .. t.length - 1]
+    tmppath = "#{td}/#{shortpath}"
+    
+    # write relative path to m3u playlist
+    f.puts shortpath
+
+    if !Dir[File.dirname(tmppath)].any?
+      # i'm too lazy to emulate -p with Dir.mkdir
+      system("mkdir", "-p", File.dirname(tmppath))
+    end
+
+    File.symlink(t, tmppath)
   end
-
-  File.symlink(t, tmppath)
+  
 end
 
 puts "done."
