@@ -5,6 +5,7 @@
 # usb music device.  requires the rubyosa gem ("sudo gem install rubyosa")
 #
 # Copyright (c) 2009 joshua stein <jcs@jcs.org>
+# Copyright (c) 2010 Tom Hayward <tom@tomh.us> added m3u feature
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
