@@ -75,51 +75,53 @@ ARGV.each do |playlist|
 
   puts "found #{tracks.length} track#{tracks.length == 1 ? '' : 's'}."
 
-  # figure out where all of them are stored by checking for the greatest common
-  # directory of every track
-  gcd = ""
-  (1 .. tracks.map{|t| t.length }.max).each do |s|
-    piece = tracks[0][0 .. s - 1]
+  if tracks.length > 0
+    # figure out where all of them are stored by checking for the greatest common
+    # directory of every track
+    gcd = ""
+    (1 .. tracks.map{|t| t.length }.max).each do |s|
+      piece = tracks[0][0 .. s - 1]
 
-    ok = true
-    tracks.each do |t|
-      if t[0 .. s - 1] != piece
-        ok = false
+      ok = true
+      tracks.each do |t|
+        if t[0 .. s - 1] != piece
+          ok = false
+        end
+      end
+
+      if ok
+        gcd = piece
+      else
+        break
       end
     end
 
-    if ok
-      gcd = piece
-    else
-      break
-    end
-  end
+    # open m3u playlist file for writing
+    File.open("#{td}/#{playlist}.m3u",'w') do |f|
+      f.puts '#EXTM3U'
 
-  # open m3u playlist file for writing
-  File.open("#{td}/#{playlist}.m3u",'w') do |f|
-    f.puts '#EXTM3U'
+      # mirror directory structure and create symlinks
+      print "linking files under #{td}/... "
 
-    # mirror directory structure and create symlinks
-    print "linking files under #{td}/... "
-
-    tracks.each do |t|
-      shortpath = t[gcd.length .. t.length - 1]
-      tmppath = "#{td}/#{shortpath}"
+      tracks.each do |t|
+        shortpath = t[gcd.length .. t.length - 1]
+        tmppath = "#{td}/#{shortpath}"
     
-      # write relative path to m3u playlist
-      f.puts shortpath
+        # write relative path to m3u playlist
+        f.puts shortpath
 
-      if !Dir[File.dirname(tmppath)].any?
-        # i'm too lazy to emulate -p with Dir.mkdir
-        system("mkdir", "-p", File.dirname(tmppath))
+        if !Dir[File.dirname(tmppath)].any?
+          # i'm too lazy to emulate -p with Dir.mkdir
+          system("mkdir", "-p", File.dirname(tmppath))
+        end
+
+        # also too lazy to emulate -f force link (needed if multiple playlists contain the same file)
+        system("ln", "-sf", t, File.dirname(tmppath))
       end
-
-      # also too lazy to emulate -f force link (needed if multiple playlists contain the same file)
-      system("ln", "-sf", t, File.dirname(tmppath))
-    end
   
+    end
+    puts "done."
   end
-  puts "done."
 
 end
 
